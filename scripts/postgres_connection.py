@@ -9,7 +9,10 @@ from pydantic import BaseModel
 from jinja2 import Environment
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
+
 
 class DBTarget(BaseModel):
     type: str
@@ -24,35 +27,42 @@ class DBTarget(BaseModel):
     password: Optional[str] = None
     port: int
 
+
 DBTarget.update_forward_refs()
+
 
 class DBTProfile(BaseModel):
     target: str
     outputs: Dict[str, DBTarget]
 
+
 DBTProfile.update_forward_refs()
 
+
 def env_var(variable_name: str, default: Optional[str] = None) -> Optional[str]:
-    logging.debug(f'Getting environment variable: {variable_name}')
+    logging.debug(f"Getting environment variable: {variable_name}")
     return os.getenv(variable_name, default)
 
+
 jinja_env = Environment()
-jinja_env.filters['env_var'] = env_var
+jinja_env.filters["env_var"] = env_var
+
 
 def get_profiles() -> Dict[str, DBTProfile]:
-    with open('profiles.yml') as f:
+    with open("profiles.yml") as f:
         template = jinja_env.from_string(f.read())
 
     profiles_string = template.render()
     obj: Dict[str, Any] = yaml.load(StringIO(profiles_string), Loader=yaml.SafeLoader)
-    if 'config' in obj.keys():
-        obj.pop('config')
+    if "config" in obj.keys():
+        obj.pop("config")
     for k, v in obj.items():
-        if 'defaults' in v['outputs']:
-            v['outputs'].pop('defaults')
+        if "defaults" in v["outputs"]:
+            v["outputs"].pop("defaults")
 
     profiles = pydantic.parse_obj_as(Dict[str, DBTProfile], obj)
     return profiles
+
 
 def connect_to_postgres(db_target: DBTarget):
     try:
@@ -61,13 +71,14 @@ def connect_to_postgres(db_target: DBTarget):
             user=db_target.user,
             password=db_target.password,
             host=db_target.account,
-            port=db_target.port 
+            port=db_target.port,
         )
         logging.info("Successfully connected to PostgreSQL")
         return conn
     except Exception as e:
         logging.exception("Error connecting to PostgreSQL")
         return None
+
 
 def get_postgres_connection(connect_profile: str, connect_target: str):
     profiles = get_profiles()
