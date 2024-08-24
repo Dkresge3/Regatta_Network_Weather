@@ -1,0 +1,13 @@
+name: regatta_weather
+
+model-paths: [model]
+seed-paths: [data]
+test-paths: [tests]
+clean-targets: ["target", "dbt_modules"]
+
+profile: "dev"
+# analysis-paths: [directorypath]
+# macro-paths: [directorypath]
+# snapshot-paths: [directorypath]
+# docs-paths: [directorypath]
+# asset-paths: [directorypath]
