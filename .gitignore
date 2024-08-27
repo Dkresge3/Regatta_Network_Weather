@@ -1,4 +1,10 @@
 myenv
 regatta_network_scrape
 profiles.yml
-target/
+target
+dbt_packages
+data
+logs
+temp
+profiles.yml
+target

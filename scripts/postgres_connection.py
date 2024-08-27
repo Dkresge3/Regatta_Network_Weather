@@ -9,9 +9,6 @@ from pydantic import BaseModel
 from jinja2 import Environment
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
 
 
 class DBTarget(BaseModel):

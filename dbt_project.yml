@@ -1,6 +1,6 @@
 name: regatta_weather
 
-model-paths: [model]
+model-paths: [models]
 seed-paths: [data]
 test-paths: [tests]
 clean-targets: ["target", "dbt_modules"]
